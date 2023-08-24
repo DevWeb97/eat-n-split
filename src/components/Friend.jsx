@@ -1,10 +1,11 @@
 import React from "react";
 import Button from "./Button";
 
-function Friend({ infos }) {
+function Friend({ infos, select, selectedFriend }) {
   const { id, name, image, balance } = infos;
+
   return (
-    <li>
+    <li className={`${selectedFriend ? "selected " : null}`}>
       <img src={image} alt={name} />
       <h3>{name}</h3>
 
@@ -20,7 +21,9 @@ function Friend({ infos }) {
       )}
       {balance === 0 && <p>{name} and you are even</p>}
 
-      <Button className="button">Select</Button>
+      <Button className="button" onClick={() => select(id)}>
+        Select
+      </Button>
     </li>
   );
 }

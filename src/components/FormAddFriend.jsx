@@ -1,40 +1,70 @@
 import React, { useState } from "react";
 import Button from "./Button";
 
-function FormAddFriend() {
-  const [isVisible, setIsVisible] = useState(true);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    setIsVisible(!isVisible);
+function FormAddFriend({ onClick, addFriend }) {
+  const initialFriend = {
+    name: "",
+    url: "https://i.pravatar.cc/48?u=",
+    balance: 0,
   };
+  const [friend, setFriend] = useState(initialFriend);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(friend.name, friend.image);
+    // if (!friend.name || !friend.image) return;
+    // console.log("he");
+
+    addFriend((prevState) => [
+      ...prevState,
+      {
+        name: friend.name,
+        image: friend.url,
+        id: crypto.randomUUID(),
+        balance: 0,
+      },
+    ]);
+    onClick();
+  };
+
+  const handleChange = (e) => {
+    setFriend((prevState) => {
+      if (e.target.name === "url") {
+        console.log("url: ", initialFriend.url.concat(e.target.value));
+        return { ...prevState, url: initialFriend.url.concat(e.target.value) };
+      } else {
+        return {
+          ...prevState,
+          [e.target.name]: e.target.value,
+        };
+      }
+    });
+  };
+
   return (
     <div>
-      {/* {!isVisible && (
-        <button className="button" onClick={handleClick}>
-          Add a friend
-        </button>
-      )} */}
+      <form action="" className="form-add-friend" onSubmit={handleSubmit}>
+        <label htmlFor="name">👫Friend Name</label>
+        <input
+          type="text"
+          name="name"
+          onChange={handleChange}
+          value={friend.name}
+          id="name"
+          required
+        />
 
-      {isVisible && (
-        <form
-          action=""
-          className="form-add-friend"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // handleClick(e);
-          }}
-        >
-          <label htmlFor="friend-name">👫Friend Name</label>
-          <input type="text" name="friend-name" id="friend-name" />
+        <label htmlFor="url">🌄Img URL</label>
+        <input
+          type="text"
+          name="url"
+          id="url"
+          value={friend.value}
+          onChange={handleChange}
+        />
 
-          <label htmlFor="friend-name">🌄Img URL</label>
-          <input type="text" name="friend-name" id="friend-name" />
-
-          <label></label>
-          <Button>Add</Button>
-        </form>
-      )}
+        <Button type="submit">Add</Button>
+      </form>
     </div>
   );
 }
